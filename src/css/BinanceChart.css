@@ -9,9 +9,41 @@
   height: 100%;
 }
 
+/* TOP BAR */
+.top-trade-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: #0b0e1100;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 14px;
+  font-size: 13px;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.top-trade-bar .pair {
+  font-weight: 600;
+  color: #eaecef;
+}
+
+.top-trade-bar .ohlc {
+  display: flex;
+  gap: 8px;
+  color: #9aa4ad;
+}
+
+.perf {
+  font-weight: 600;
+}
+
+/* TOOLBARS */
 .toolbar {
   position: absolute;
-  top: 12px;
   display: flex;
   background: #1e222d;
   border-radius: 6px;
@@ -19,12 +51,13 @@
 }
 
 .toolbar.left {
-  left: 12px;
+  left: 50px;
+  bottom: 35px;
 }
 
 .toolbar.right {
-  right: 12px;
-  flex-wrap: wrap;
+  right: 75px;
+  top: 15px;
 }
 
 .toolbar button {
@@ -36,6 +69,58 @@
 }
 
 .toolbar button.active {
+  background: #2962ff;
+  color: #fff;
+}
+
+/* DROPDOWN */
+.interval-dropdown {
+  position: absolute;
+}
+
+.dropdown-btn {
+  background: #1e222d;
+  border: none;
+  padding: 6px 12px;
+  color: #eaecef;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: #1e222d;
+  border-radius: 8px;
+  padding: 8px;
+  min-width: 220px;
+  z-index: 50;
+}
+
+.group-title {
+  font-size: 11px;
+  color: #9aa4ad;
+  margin: 6px 0 4px;
+}
+
+.group-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.group-items button {
+  background: #2a2e39;
+  border: none;
+  color: #aaa;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.group-items button.active {
   background: #2962ff;
   color: #fff;
 }

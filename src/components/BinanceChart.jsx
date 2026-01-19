@@ -9,6 +9,7 @@ import {
 } from "lightweight-charts";
 
 const SYMBOL = "BTCUSDT";
+const EXCHANGE = "Binance";
 
 const INTERVALS = {
   Seconds: ["1s"],
@@ -48,6 +49,17 @@ export default function BinanceChart() {
   const [interval, setInterval] = useState("1m");
   const [chartType, setChartType] = useState("candlestick");
   const [history, setHistory] = useState([]);
+  const [showIntervalMenu, setShowIntervalMenu] = useState(false);
+
+  const [topBar, setTopBar] = useState({
+    open: null,
+    high: null,
+    low: null,
+    close: null,
+    change: null,
+    percent: null,
+    isUp: true,
+  });
 
   const formatRemaining = (ms) => {
     if (ms <= 0) return "00:00";
@@ -79,16 +91,12 @@ export default function BinanceChart() {
     if (!chartRef.current) return;
     if (seriesRef.current) chartRef.current.removeSeries(seriesRef.current);
 
-    const baseOpts = {
-      lastValueVisible: false,
-      priceLineVisible: false,
-    };
+    const baseOpts = { lastValueVisible: false, priceLineVisible: false };
 
     if (chartType === "line") {
       seriesRef.current = chartRef.current.addSeries(LineSeries, {
         ...baseOpts,
         color: "#4cafef",
-        lineWidth: 2,
       });
     } else if (chartType === "area") {
       seriesRef.current = chartRef.current.addSeries(AreaSeries, {
@@ -135,39 +143,23 @@ export default function BinanceChart() {
       const high = +k.h;
       const low = +k.l;
 
+      const change = close - open;
+      const percent = open ? (change / open) * 100 : 0;
       const isUp = close >= open;
-      const color = isUp ? "#26a69a" : "#ef5350";
 
-      if (chartType === "line" || chartType === "area") {
-        seriesRef.current.update({
-          time: k.t / 1000,
-          value: close,
-        });
-      } else if (chartType === "bar") {
-        seriesRef.current.update({
-          time: k.t / 1000,
-          open,
-          high,
-          low,
-          close,
-          color,
-        });
-      } else {
-        seriesRef.current.update({
-          time: k.t / 1000,
-          open,
-          high,
-          low,
-          close,
-          color,
-          borderColor: color,
-          wickColor: color,
-        });
-      }
+      setTopBar({ open, high, low, close, change, percent, isUp });
+
+      seriesRef.current.update({
+        time: k.t / 1000,
+        open,
+        high,
+        low,
+        close,
+        value: close,
+      });
 
       const duration = INTERVAL_DURATION[interval];
       const remainingMs = Math.max(0, k.t + duration * 1000 - data.E);
-      const timeText = formatRemaining(remainingMs);
 
       if (priceLineRef.current) {
         seriesRef.current.removePriceLine(priceLineRef.current);
@@ -175,10 +167,9 @@ export default function BinanceChart() {
 
       priceLineRef.current = seriesRef.current.createPriceLine({
         price: close,
-        color,
-        lineWidth: 2,
+        color: isUp ? "#26a69a" : "#ef5350",
         axisLabelVisible: true,
-        title: `${close.toFixed(2)} | ${timeText}`,
+        title: `${close.toFixed(2)} | ${formatRemaining(remainingMs)}`,
       });
     };
   };
@@ -196,29 +187,26 @@ export default function BinanceChart() {
       timeScale: { timeVisible: true, secondsVisible: true },
     });
 
-    const resize = () => {
-      chartRef.current.applyOptions({
-        width: containerRef.current.clientWidth,
-        height: containerRef.current.clientHeight,
-      });
-    };
-
-    window.addEventListener("resize", resize);
-    resize();
-
     return () => {
-      window.removeEventListener("resize", resize);
       wsRef.current?.close();
       chartRef.current.remove();
     };
   }, []);
 
   useEffect(() => {
+    let active = true;
+
     (async () => {
       const data = await fetchHistory();
+      if (!active) return;
       createSeries(data);
       connectWS();
     })();
+
+    return () => {
+      active = false;
+      wsRef.current?.close();
+    };
   }, [interval]);
 
   useEffect(() => {
@@ -229,6 +217,23 @@ export default function BinanceChart() {
     <div className="chart-wrapper">
       <div ref={containerRef} className="chart-container" />
 
+      <div className="top-trade-bar">
+        <div className="pair">
+          Bitcoin / TetherUS · {interval} · {EXCHANGE}
+        </div>
+
+        <div className="ohlc">
+          O <span style={{ color: topBar.isUp ? "#26a69a" : "#ef5350" }}>{topBar.open?.toFixed(2)}</span>
+          H <span style={{ color: topBar.isUp ? "#26a69a" : "#ef5350" }}>{topBar.high?.toFixed(2)}</span>
+          L <span style={{ color: topBar.isUp ? "#26a69a" : "#ef5350" }}>{topBar.low?.toFixed(2)}</span>
+          C <span style={{ color: topBar.isUp ? "#26a69a" : "#ef5350" }}>{topBar.close?.toFixed(2)}</span>
+        </div>
+
+        <div className="perf" style={{ color: topBar.isUp ? "#26a69a" : "#ef5350" }}>
+          {topBar.change?.toFixed(2)} ({topBar.percent?.toFixed(2)}%)
+        </div>
+      </div>
+
       <div className="toolbar left">
         <button onClick={() => setChartType("candlestick")}>C</button>
         <button onClick={() => setChartType("line")}>L</button>
@@ -236,16 +241,34 @@ export default function BinanceChart() {
         <button onClick={() => setChartType("bar")}>B</button>
       </div>
 
-      <div className="toolbar right">
-        {Object.values(INTERVALS).flat().map((v) => (
-          <button
-            key={v}
-            className={interval === v ? "active" : ""}
-            onClick={() => setInterval(v)}
-          >
-            {v}
-          </button>
-        ))}
+      <div className="toolbar right interval-dropdown">
+        <button className="dropdown-btn" onClick={() => setShowIntervalMenu((p) => !p)}>
+          ⏱ {interval}
+        </button>
+
+        {showIntervalMenu && (
+          <div className="dropdown-menu">
+            {Object.entries(INTERVALS).map(([group, values]) => (
+              <div key={group}>
+                <div className="group-title">{group}</div>
+                <div className="group-items">
+                  {values.map((v) => (
+                    <button
+                      key={v}
+                      className={interval === v ? "active" : ""}
+                      onClick={() => {
+                        setInterval(v);
+                        setShowIntervalMenu(false);
+                      }}
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
