@@ -122,17 +122,15 @@
   padding: 5px;
 }
 
-/* Toolbar Wrapper */
 .main-toolbar-left {
   position: absolute;
   left: 10px;
-  top: 50px; /* Top bar ની નીચે */
+  top: 50px;
   display: flex;
   gap: 10px;
   z-index: 100;
 }
 
-/* Vertical Icons (C, L, A, B) */
 .toolbar-group.vertical {
   display: flex;
   flex-direction: column;
@@ -158,7 +156,6 @@
   border-radius: 4px;
 }
 
-/* Interval Dropdown Button */
 .interval-wrapper {
   position: relative;
 }
@@ -173,11 +170,9 @@
   font-weight: bold;
 }
 
-
-/* ડ્રોપડાઉન મેનૂ હવે ડાબી બાજુથી ખુલશે */
 .dropdown-menu {
   position: absolute;
-  left: 0; /* આને Right ના બદલે Left કર્યું */
+  left: 0;
   top: 40px;
   background: #1e222d;
   border: 1px solid #363c4e;
@@ -217,11 +212,6 @@
   color: white;
 }
 
-
-
-
-
-
 .dropdown-menu-left {
   position: absolute;
   left: 0;
@@ -247,4 +237,19 @@
 .chart-types button.active {
   color: #2962ff;
   background: #2a2e39;
+}
+
+#custom-axis-label {
+    position: absolute;
+    right: 0;
+    z-index: 1000;
+    color: white;
+    padding: 4px 6px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    border-radius: 2px 0 0 2px;
+    font-family: sans-serif;
+    pointer-events: none;
 }

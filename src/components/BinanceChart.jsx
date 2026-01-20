@@ -186,10 +186,35 @@ export default function BinanceChart() {
       priceLineRef.current = seriesRef.current.createPriceLine({
         price: close,
         color: isUp ? "#26a69a" : "#ef5350",
-        axisLabelVisible: true,
-        title: `${close.toFixed(2)} | ${formatRemaining(remainingMs)}`,
+        lineWidth: 1,
+        lineStyle: 2,
+        axisLabelVisible: false,
+        title: "",
       });
+
+      updateCustomAxisLabel(close, formatRemaining(remainingMs), isUp ? "#26a69a" : "#ef5350");
     };
+  };
+
+  const updateCustomAxisLabel = (price, time, color) => {
+    let el = document.getElementById('custom-axis-label');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'custom-axis-label';
+      document.querySelector('.tv-lightweight-charts').appendChild(el);
+    }
+
+    const coordinate = seriesRef.current.priceToCoordinate(price);
+
+    if (coordinate !== null) {
+      el.style.display = 'flex';
+      el.style.top = `${coordinate - 20}px`;
+      el.style.backgroundColor = color;
+      el.innerHTML = `
+            <div style="font-size: 13px; font-weight: bold;">${price.toFixed(2)}</div>
+            <div style="font-size: 11px; margin-top: -2px;">${time}</div>
+        `;
+    }
   };
 
   useEffect(() => {
