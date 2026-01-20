@@ -58,6 +58,18 @@
   align-items: center;
 }
 
+.toolbar.left {
+  left: 10px;
+  top: 50px;
+  display: flex;
+  align-items: center;
+  background: #1e222d;
+  border: 1px solid #363c4e;
+  border-radius: 4px;
+  padding: 2px;
+  z-index: 100;
+}
+
 .toolbar.right {
   right: 15px;
   top: 50px;
@@ -203,4 +215,36 @@
 .group-items button.active {
   background: #2962ff;
   color: white;
+}
+
+
+
+
+
+
+.dropdown-menu-left {
+  position: absolute;
+  left: 0;
+  top: 40px;
+  background: #1e222d;
+  border: 1px solid #363c4e;
+  border-radius: 6px;
+  padding: 12px;
+  min-width: 200px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  z-index: 200;
+}
+
+.chart-types button {
+  background: none;
+  border: none;
+  color: #d1d4dc;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.chart-types button.active {
+  color: #2962ff;
+  background: #2a2e39;
 }
