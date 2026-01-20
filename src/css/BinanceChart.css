@@ -2,6 +2,7 @@
   position: fixed;
   inset: 0;
   background: #131722;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .chart-container {
@@ -9,82 +10,72 @@
   height: 100%;
 }
 
-/* TOP BAR */
+.chart-types {
+  display: flex;
+}
+
 .top-trade-bar {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 36px;
-  background: #0b0e1100;
+  height: 40px;
+  background: rgba(19, 23, 34, 0.8);
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 0 14px;
+  gap: 20px;
+  padding: 0 15px;
   font-size: 13px;
-  z-index: 40;
-  pointer-events: none;
+  z-index: 100;
+  border-bottom: 1px solid #2a2e39;
 }
 
 .top-trade-bar .pair {
-  font-weight: 600;
-  color: #eaecef;
+  font-weight: bold;
+  color: #fff;
 }
 
 .top-trade-bar .ohlc {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   color: #9aa4ad;
 }
 
-.perf {
-  font-weight: 600;
-}
-
-/* TOOLBARS */
 .toolbar {
   position: absolute;
   display: flex;
   background: #1e222d;
-  border-radius: 6px;
-  z-index: 20;
+  border-radius: 4px;
+  z-index: 90;
+  padding: 2px;
+  border: 1px solid #363c4e;
 }
 
 .toolbar.left {
-  left: 50px;
-  bottom: 35px;
+  left: 15px;
+  top: 50px;
+  flex-direction: row;
+  align-items: center;
 }
 
 .toolbar.right {
-  right: 75px;
-  top: 15px;
+  right: 15px;
+  top: 50px;
 }
 
 .toolbar button {
   background: none;
   border: none;
-  padding: 6px 10px;
-  color: #aaa;
+  padding: 8px 12px;
+  color: #d1d4dc;
   cursor: pointer;
+  font-size: 12px;
 }
 
 .toolbar button.active {
-  background: #2962ff;
-  color: #fff;
-}
-
-/* DROPDOWN */
-.interval-dropdown {
-  position: absolute;
-}
-
-.dropdown-btn {
-  background: #1e222d;
-  border: none;
-  padding: 6px 12px;
-  color: #eaecef;
-  cursor: pointer;
-  border-radius: 6px;
+  color: #2962ff;
+  background: #2a2e39;
+  border-radius: 4px;
 }
 
 .dropdown-menu {
@@ -92,35 +83,124 @@
   right: 0;
   top: 40px;
   background: #1e222d;
-  border-radius: 8px;
-  padding: 8px;
-  min-width: 220px;
-  z-index: 50;
+  border: 1px solid #363c4e;
+  border-radius: 4px;
+  padding: 10px;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
 .group-title {
-  font-size: 11px;
-  color: #9aa4ad;
-  margin: 6px 0 4px;
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  margin-bottom: 5px;
 }
 
 .group-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
 }
 
 .group-items button {
   background: #2a2e39;
-  border: none;
-  color: #aaa;
-  padding: 4px 8px;
-  cursor: pointer;
+  border-radius: 2px;
+  padding: 5px;
+}
+
+/* Toolbar Wrapper */
+.main-toolbar-left {
+  position: absolute;
+  left: 10px;
+  top: 50px; /* Top bar ની નીચે */
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+/* Vertical Icons (C, L, A, B) */
+.toolbar-group.vertical {
+  display: flex;
+  flex-direction: column;
+  background: #1e222d;
+  border: 1px solid #363c4e;
   border-radius: 4px;
+  padding: 2px;
+}
+
+.toolbar-group button {
+  background: #1e222d;
+  border: none;
+  padding: 8px 10px;
+  color: #d1d4dc;
+  cursor: pointer;
   font-size: 12px;
+  font-weight: bold;
+}
+
+.toolbar-group button.active {
+  color: #2962ff;
+  background: #2a2e39;
+  border-radius: 4px;
+}
+
+/* Interval Dropdown Button */
+.interval-wrapper {
+  position: relative;
+}
+
+.dropdown-btn {
+  background: #1e222d;
+  border: 1px solid #363c4e;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+/* ડ્રોપડાઉન મેનૂ હવે ડાબી બાજુથી ખુલશે */
+.dropdown-menu {
+  position: absolute;
+  left: 0; /* આને Right ના બદલે Left કર્યું */
+  top: 40px;
+  background: #1e222d;
+  border: 1px solid #363c4e;
+  border-radius: 4px;
+  padding: 10px;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  z-index: 110;
+}
+
+.interval-section {
+  margin-bottom: 10px;
+}
+
+.group-title {
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.group-items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+
+.group-items button {
+  background: #2a2e39;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 11px;
 }
 
 .group-items button.active {
   background: #2962ff;
-  color: #fff;
+  color: white;
 }
